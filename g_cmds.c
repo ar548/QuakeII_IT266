@@ -928,6 +928,8 @@ void ClientCommand (edict_t *ent)
 		Cmd_Use_f (ent);
 	else if (Q_stricmp (cmd, "drop") == 0)
 		Cmd_Drop_f (ent);
+	else if (Q_stricmp (cmd, "spawnBall") == 0)
+		//createSphere(ent);
 	else if (Q_stricmp (cmd, "give") == 0)
 		Cmd_Give_f (ent);
 	else if (Q_stricmp (cmd, "god") == 0)
@@ -968,6 +970,28 @@ void ClientCommand (edict_t *ent)
 		Cmd_Wave_f (ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
+	else if (Q_stricmp(cmd, "push") == 0)
+	{
+		// adding comands for push of the ball (hopefully) 
+		// Alex Rosen
+		Cmd_push(ent);
+	}
+	else if (Q_stricmp(cmd, "pull") == 0)
+	{
+		// adding comands for pull of the ball (hopefully) 
+		// Alex Rosen
+		Cmd_pull(ent);
+	}
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
+}
+
+// Alex Rosen
+void Cmd_pull(edict_t *ent){
+
+}
+
+// Alex Rosen
+void Cmd_push(edict_t *ent){
+
 }
