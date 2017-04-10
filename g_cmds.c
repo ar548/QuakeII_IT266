@@ -1,6 +1,12 @@
 #include "g_local.h"
 #include "m_player.h"
 
+// Alex Rosen
+void Cmd_pull(edict_t *ent);
+void Cmd_push(edict_t *ent);
+void Cmd_spawnBall(edict_t *ent);
+
+
 
 char *ClientTeam (edict_t *ent)
 {
@@ -928,8 +934,6 @@ void ClientCommand (edict_t *ent)
 		Cmd_Use_f (ent);
 	else if (Q_stricmp (cmd, "drop") == 0)
 		Cmd_Drop_f (ent);
-	else if (Q_stricmp (cmd, "spawnBall") == 0)
-		//createSphere(ent);
 	else if (Q_stricmp (cmd, "give") == 0)
 		Cmd_Give_f (ent);
 	else if (Q_stricmp (cmd, "god") == 0)
@@ -974,24 +978,46 @@ void ClientCommand (edict_t *ent)
 	{
 		// adding comands for push of the ball (hopefully) 
 		// Alex Rosen
-		Cmd_push(ent);
+		// Cmd_push(ent);
 	}
 	else if (Q_stricmp(cmd, "pull") == 0)
 	{
 		// adding comands for pull of the ball (hopefully) 
 		// Alex Rosen
-		Cmd_pull(ent);
+		// Cmd_pull(ent);
+	}
+	else if (Q_stricmp (cmd, "spawnBall") == 0)
+	{
+		//see if i can spawn the ball from the console
+		// Alex Rosen
+		// Cmd_spawnBall(ent);
 	}
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }
 
 // Alex Rosen
-void Cmd_pull(edict_t *ent){
-
+void Cmd_pull(edict_t *ent)
+{
+	gi.cprintf (ent, PRINT_HIGH, "using pull command.\n");
 }
 
 // Alex Rosen
-void Cmd_push(edict_t *ent){
+void Cmd_push(edict_t *ent)
+{
+	gi.cprintf (ent, PRINT_HIGH, "using push command.\n");
+}
 
+//Alex Rosen
+void Cmd_spawnBall(edict_t *ent)
+{
+	// use gi.trace to find where the player is looking 
+	// move the spawnpoint in along the vector so its not clipping the wall
+	// generate a sphere of radius
+	// make sure the sphere is not clipping anything
+		// if the sphere is clipping move it along the vecotr until its not
+	// G_spawn() the sphere (i tihnk)
+	// return
+
+	gi.cprintf (ent, PRINT_HIGH, "Spawning the ball.\n");
 }
