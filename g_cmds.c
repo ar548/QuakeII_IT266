@@ -5,7 +5,7 @@
 void Cmd_pull(edict_t *ent);
 void Cmd_push(edict_t *ent);
 void Cmd_spawnBall(edict_t *ent);
-
+void Cmd_showScore(edict_t *ent);
 
 
 char *ClientTeam (edict_t *ent)
@@ -992,6 +992,10 @@ void ClientCommand (edict_t *ent)
 		// Alex Rosen
 		// Cmd_spawnBall(ent);
 	}
+	else if (Q_stricmp (cmd, "showScore") == 0)
+	{
+		Cmd_showScore(ent);
+	}
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }
@@ -1020,4 +1024,11 @@ void Cmd_spawnBall(edict_t *ent)
 	// return
 
 	gi.cprintf (ent, PRINT_HIGH, "Spawning the ball.\n");
+}
+
+void Cmd_showScore(edict_t *ent)
+{
+	// when the player presses tab this will make the score displayed in the center of the screen 
+	gi.centerprintf(ent, "%i : %i", ent->myScore, ent->opponentScore);
+	
 }

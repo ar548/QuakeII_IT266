@@ -209,7 +209,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 		switch (mod)
 		{
 		case MOD_SUICIDE:
-			message = "suicides";
+			message = "suicides.  That god damn MORON!!!";
 			break;
 		case MOD_FALLING:
 			message = "cratered";

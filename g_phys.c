@@ -683,7 +683,8 @@ void SV_Physics_Toss (edict_t *ent)
 
 // add gravity
 	if (ent->movetype != MOVETYPE_FLY
-	&& ent->movetype != MOVETYPE_FLYMISSILE)
+	&& ent->movetype != MOVETYPE_FLYMISSILE
+	&& ent->movetype != MOVETYPE_FLYRICOCHET)	// Alex Rosen
 		SV_AddGravity (ent);
 
 // move angles
@@ -697,15 +698,27 @@ void SV_Physics_Toss (edict_t *ent)
 
 	if (trace.fraction < 1)
 	{
-		if (ent->movetype == MOVETYPE_BOUNCE)
+		// Alex Rosen
+		// im not actually sure how this works by it apparently makes the bullet bounce off the wall with equal and opposite velocity
+		if (ent->movetype == MOVETYPE_FLYRICOCHET)
+			backoff = 2;	// Alex Rosen
+		else if (ent->movetype == MOVETYPE_BOUNCE)
 			backoff = 1.5;
 		else
 			backoff = 1;
 
 		ClipVelocity (ent->velocity, trace.plane.normal, ent->velocity, backoff);
 
+		// Alex Rosen
+		// reset the angle of the bolt to align to the velocity
+		if (ent->movetype == MOVETYPE_FLYRICOCHET)
+		{
+			vectoangles (ent->velocity, ent->s.angles);
+		}
+
 	// stop if on ground
-		if (trace.plane.normal[2] > 0.7)
+		// Alex Rosen changed the next line so that yjr bolts wont stop when they hit the ground
+		if (trace.plane.normal[2] > 0.7 && ent->movetype != MOVETYPE_FLYRICOCHET)
 		{		
 			if (ent->velocity[2] < 60 || ent->movetype != MOVETYPE_BOUNCE )
 			{
@@ -934,6 +947,7 @@ void G_RunEntity (edict_t *ent)
 	case MOVETYPE_BOUNCE:
 	case MOVETYPE_FLY:
 	case MOVETYPE_FLYMISSILE:
+	case MOVETYPE_FLYRICOCHET:
 		SV_Physics_Toss (ent);
 		break;
 	default:
