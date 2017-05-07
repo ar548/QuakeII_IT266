@@ -1878,7 +1878,7 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 
 	gib = G_Spawn();
 
-	VectorScale (ent->size, 0.5, size);	// Alex Rosen IMPORTANT: I will need to change the size of the ball when i spawn it.  
+	VectorScale (ent->size, 10, size);	// Alex Rosen IMPORTANT: I will need to change the size of the ball when i spawn it.  
 	VectorAdd (ent->absmin, size, origin);
 	// Replace below with the mouth height and forward velocity
 	//gib->s.origin[0] = origin[0] + crandom() * size[0];
@@ -1900,16 +1900,21 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	gib->avelocity[1] = random()*600;
 	gib->avelocity[2] = random()*600;
 
+
 	gi.setmodel (gib, "models/objects/gibs/sm_meat/tris.md2");
-	gib->solid = SOLID_NOT;
+	gib->solid = SOLID_TRIGGER;
 	gib->s.effects |= EF_GIB;
-	gib->flags |= FL_NO_KNOCKBACK; // Alex Rosen IMPORTANT: i will need knock back to physics the ball when i spawn it.  
+	gib->mass = 50;
+	
+	//gib->flags |= FL_NO_KNOCKBACK; // Alex Rosen IMPORTANT: i will need knock back to physics the ball when i spawn it.  
+	// lets see if commenting out the above causes some flying gibs
 	gib->takedamage = DAMAGE_YES;
 	gib->die = gib_die;
+	gib->health = 100;
 
-	// sets movetupes for the gib, im just gonna let it bounce
-	gib->movetype = MOVETYPE_BOUNCE;
-	vscale = 1.5;
+	// sets movetupes for the gib, </ ! >im just gonna let it bounce
+	gib->movetype = MOVETYPE_TOSS;
+	vscale = 0.5;
 	/*
 	if (type == GIB_ORGANIC)
 	{

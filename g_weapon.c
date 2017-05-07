@@ -310,8 +310,11 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 		if (self->spawnflags & 1)
 			mod = MOD_HYPERBLASTER;
 		else
+		{
 			mod = MOD_BLASTER;
-		//T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_ENERGY, mod);
+			mod |= ~DAMAGE_NO_KNOCKBACK;
+		}
+		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 5000, DAMAGE_ENERGY, mod);
 		// Alex Rosen
 		// I dont want my weapons to do damage. here is where the weapons will physics the ball
 	}
@@ -415,7 +418,7 @@ static void Grenade_Explode (edict_t *ent)
 			mod = MOD_HANDGRENADE;
 		else
 			mod = MOD_GRENADE;
-		//T_Damage (ent->enemy, ent, ent->owner, dir, ent->s.origin, vec3_origin, (int)points, (int)points, DAMAGE_RADIUS, mod);
+		T_Damage (ent->enemy, ent, ent->owner, dir, ent->s.origin, vec3_origin, (int)points, 100, DAMAGE_RADIUS, mod);
 		// Alex Rosen
 		// I dont want my weapons to do damage. here is where the weapons will physics the ball
 		// I should add a else if statement to check if the ball is what is being hit
