@@ -1857,3 +1857,80 @@ void SP_misc_teleporter_dest (edict_t *ent)
 	gi.linkentity (ent);
 }
 
+// Alex Rosen
+/*
+ * adding the following function as per tutorial at https://www.quakewiki.net/archives/qdevels/quake2/17_12_97.html
+ * this is to help learn to spawn objects into the world
+ * spawning vomit chunks woooo
+ */
+// the function from the tutorial, im gonna try changing this to make more sense to me
+
+
+//void ThrowVomit (edict_t *self, char *gibname, int damage, int type)
+void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, vec3_t player_vel)
+{
+	edict_t *gib;
+
+	vec3_t	vd;
+	vec3_t	origin;
+	vec3_t	size;
+	float	vscale;
+
+	gib = G_Spawn();
+
+	VectorScale (ent->size, 0.5, size);	// Alex Rosen IMPORTANT: I will need to change the size of the ball when i spawn it.  
+	VectorAdd (ent->absmin, size, origin);
+	// Replace below with the mouth height and forward velocity
+	//gib->s.origin[0] = origin[0] + crandom() * size[0];
+	//gib->s.origin[1] = origin[1] + crandom() * size[1];
+	//gib->s.origin[2] = origin[2] + crandom() * size[2];
+	
+	// set the spawn point of the vomit
+	VectorCopy (mouth_pos, gib->s.origin);
+
+	// set the spawn velocity of the vomit then make sure that the player velocity is added so it looks right
+	VectorScale (forward, 120 + crandom()*40, gib->velocity);
+	VectorAdd (player_vel, gib->velocity, gib->velocity);
+	// add a random left-right component to the vomit velocity
+	VectorScale (right, crandom()*20, right);
+	VectorAdd (right, gib->velocity, gib->velocity);
+
+	// add in some random components to the angular velocity (make that barf spin)
+	gib->avelocity[0] = random()*600;
+	gib->avelocity[1] = random()*600;
+	gib->avelocity[2] = random()*600;
+
+	gi.setmodel (gib, "models/objects/gibs/sm_meat/tris.md2");
+	gib->solid = SOLID_NOT;
+	gib->s.effects |= EF_GIB;
+	gib->flags |= FL_NO_KNOCKBACK; // Alex Rosen IMPORTANT: i will need knock back to physics the ball when i spawn it.  
+	gib->takedamage = DAMAGE_YES;
+	gib->die = gib_die;
+
+	// sets movetupes for the gib, im just gonna let it bounce
+	gib->movetype = MOVETYPE_BOUNCE;
+	vscale = 1.5;
+	/*
+	if (type == GIB_ORGANIC)
+	{
+		gib->movetype = MOVETYPE_TOSS;
+		gib->touch = gib_touch;
+		vscale = 0.5;
+	}
+	else
+	{
+		gib->movetype = MOVETYPE_BOUNCE;
+		vscale = 1.0;
+	}
+	*/
+
+	// im not using damage at the moment anyways, below is commented out
+	//VelocityForDamage (damage, vd);
+	//VectorMA (self->velocity, vscale, vd, gib->velocity);
+	//ClipGibVelocity (gib);	// Alex Rosen I need to find out what this function does and maybe rip it off in a bit
+
+	gib->think = G_FreeEdict;
+	gib->nextthink = level.time + 10 + random()*10;
+
+	gi.linkentity (gib);
+}

@@ -1,5 +1,6 @@
 #include "g_local.h"
 #include "m_player.h"
+#include "t_throwup.h"
 
 // Alex Rosen
 void Cmd_pull(edict_t *ent);
@@ -144,6 +145,18 @@ void Cmd_Give_f (edict_t *ent)
 	int			i;
 	qboolean	give_all;
 	edict_t		*it_ent;
+
+	// Alex Rosen
+	/*
+	 * this is per the tutorial at https://www.quakewiki.net/archives/qdevels/quake2/16_12_97b.html
+	 * adding throwup to the game so to learn to spawn spheres (will resize these spheres to make my soccerball) then add physics to them
+	 */
+	if (Q_stricmp(gi.argv(1), "throwup") == 0)
+	{
+		// throw up !
+		ThrowUpNow (ent);
+		return;
+	}
 
 	if (deathmatch->value && !sv_cheats->value)
 	{
