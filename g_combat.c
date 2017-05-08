@@ -439,8 +439,8 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		vec3_t kvel;
 		float	mass = 50;
 		targ->toScore = inflictor->owner;
-		VectorSet(targ->s.origin, targ->s.origin[0], targ->s.origin[1]+10, targ->s.origin[2]);
-		
+		//VectorSet(targ->s.origin, targ->s.origin[0], targ->s.origin[1], targ->s.origin[2] + 10);
+		//targ->s.origin[2]+=10;
 		VectorScale (dir, 500.0 * (float)knockback / mass, kvel);
 		VectorAdd (targ->velocity, kvel, targ->velocity);
 	}

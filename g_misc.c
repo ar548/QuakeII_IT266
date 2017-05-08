@@ -1940,8 +1940,8 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	//ClipGibVelocity (gib);	// Alex Rosen I need to find out what this function does and maybe rip it off in a bit
 
 	// attempt at setting bounding boxes
-	VectorSet(gib->mins, -25, -25, -25);
-	VectorSet(gib->maxs, 25, 25, 25);
+	VectorSet(gib->mins, -15, -15, -15);
+	VectorSet(gib->maxs, 15, 15, 15);
 
 	// setting vars from g_local.h
 	gib->add_vel = false;
@@ -1976,6 +1976,8 @@ void VomitGib_think(edict_t *ent)
 		// add to the total number of times scored
 		// if times scored is more than (1?) delete the gib 
 
+	//ent->velocity[2] += 10;
+
 	edict_t *blip = NULL;
 	vec3_t dist_vec;
 	int currentDistance = 0;
@@ -1997,15 +1999,15 @@ void VomitGib_think(edict_t *ent)
 		VectorSubtract(ent->s.old_origin, blip->s.old_origin, dist_vec);
 		currentDistance = VectorLength(dist_vec);
 		//gi.centerprintf(ent->owner, "%i", currentDistance);
-		if(currentDistance <= 15)
+		if(currentDistance <= 37)
 		{
 			gi.centerprintf(ent->toScore, "scoring");
-			//gi.centerprintf(blip, "scored on");
+			gi.centerprintf(blip, "scored on");
 			
 			if(ent->toScore)
 			{
 				ent->toScore->client->resp.score++;
-				ent->think = G_FreeEdict;
+				G_FreeEdict(ent);
 			}
 		}
 	}
@@ -2017,4 +2019,5 @@ void VomitGib_think(edict_t *ent)
 	//	vec3_t player_pos;
 	//	player_pos = game.clients[i]
 	//}
+	
 }
