@@ -91,7 +91,7 @@ qboolean fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 	VectorSubtract (point, self->enemy->s.origin, dir);
 
 	// do the damage
-	// T_Damage (tr.ent, self, self, dir, point, vec3_origin, damage, kick/2, DAMAGE_NO_KNOCKBACK, MOD_HIT);
+	T_Damage (tr.ent, self, self, dir, point, vec3_origin, damage, 1000, 0, MOD_HIT);
 	// Alex Rosen
 	// I dont want my weapons to do damage. here is where the weapons will physics the ball
 
@@ -207,7 +207,7 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 		{
 			if (tr.ent->takedamage)
 			{
-				//T_Damage (tr.ent, self, self, aimdir, tr.endpos, tr.plane.normal, damage, kick, DAMAGE_BULLET, mod);
+				T_Damage (tr.ent, self, self, aimdir, tr.endpos, tr.plane.normal, damage, 500, DAMAGE_BULLET, mod);
 				// Alex Rosen
 				// I dont want my weapons to do damage. here is where the weapons will physics the ball
 				// i should probably add an else if statement to check if the item hit is the ball
@@ -506,16 +506,16 @@ static void proxim_think (edict_t *ent)
 	ent->think = proxim_think;
 	while ((blip = findradius(blip, ent->s.origin, 100)) != NULL)
 	{
-		//if (!(blip->svflags & SVF_MONSTER) && !blip->client)
-		//	continue;
-		//if (blip == ent->owner)
-		//	continue;
-		//if (!blip->takedamage)
-		//	continue;
-		//if (blip->health <= 0)
-		//	continue;
-		//if (!visible(ent, blip))
-		//	continue;
+		if (!(blip->svflags & SVF_MONSTER) && !blip->client)
+			continue;
+		if (blip == ent->owner)
+			continue;
+		if (!blip->takedamage)
+			continue;
+		if (blip->health <= 0)
+			continue;
+		if (!visible(ent, blip))
+			continue;
 
 		if (!blip->is_vomit)
 			continue;
@@ -523,9 +523,17 @@ static void proxim_think (edict_t *ent)
 		// the currentity entity is the ball
 		
 		// add to the score
-		blip->toScore->myScore++;
+		if(!blip->toScore)
+			continue;
+		else
+		{
+			blip->toScore->myScore++;
+			blip->die;
+			Grenade_Explode(ent);
+			return;
+		}
 		// remove the ball
-		blip->die;
+		//blip->die;
 
 		// TODO update score for all players
 

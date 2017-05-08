@@ -1904,8 +1904,8 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	gib->avelocity[1] = random()*600;
 	gib->avelocity[2] = random()*600;
 
-
-	gi.setmodel (gib, "models/objects/torso/tris.md2");
+	//gi.setmodel (gib, "models/objects/torso/tris.md2");
+	gi.setmodel (gib, "models/objects/gibs/chest/tris.md2");
 	gib->solid = SOLID_BBOX;
 	gib->s.effects |= EF_ROCKET;
 	gib->mass = 50;
