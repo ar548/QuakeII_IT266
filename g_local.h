@@ -1110,5 +1110,6 @@ struct edict_s
 	vec3_t gib_vel;
 	qboolean add_vel;
 	qboolean is_vomit;
+	edict_t *toScore;
 
 };

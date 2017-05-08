@@ -1,6 +1,8 @@
 #include "g_local.h"
 
-
+// Alex Rosen
+// the range that the 
+#define goal_Range = 100; 
 /*
 =================
 check_dodge
@@ -504,16 +506,30 @@ static void proxim_think (edict_t *ent)
 	ent->think = proxim_think;
 	while ((blip = findradius(blip, ent->s.origin, 100)) != NULL)
 	{
-		if (!(blip->svflags & SVF_MONSTER) && !blip->client)
+		//if (!(blip->svflags & SVF_MONSTER) && !blip->client)
+		//	continue;
+		//if (blip == ent->owner)
+		//	continue;
+		//if (!blip->takedamage)
+		//	continue;
+		//if (blip->health <= 0)
+		//	continue;
+		//if (!visible(ent, blip))
+		//	continue;
+
+		if (!blip->is_vomit)
 			continue;
-		if (blip == ent->owner)
-			continue;
-		if (!blip->takedamage)
-			continue;
-		if (blip->health <= 0)
-			continue;
-		if (!visible(ent, blip))
-			continue;
+
+		// the currentity entity is the ball
+		
+		// add to the score
+		blip->toScore->myScore++;
+		// remove the ball
+		blip->die;
+
+		// TODO update score for all players
+
+
 		ent->think = Grenade_Explode;
 		break;
 	}

@@ -1905,9 +1905,9 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	gib->avelocity[2] = random()*600;
 
 
-	gi.setmodel (gib, "models/objects/gibs/sm_meat/tris.md2");
+	gi.setmodel (gib, "models/objects/torso/tris.md2");
 	gib->solid = SOLID_BBOX;
-	gib->s.effects |= EF_GIB;
+	gib->s.effects |= EF_ROCKET;
 	gib->mass = 50;
 	
 	//gib->flags |= FL_NO_KNOCKBACK; // Alex Rosen IMPORTANT: i will need knock back to physics the ball when i spawn it.  
@@ -1917,9 +1917,9 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	gib->health = 100; // thigs need to have health to be knocked back
 
 	// sets movetupes for the gib, </ ! >im just gonna let it bounce
-	gib->movetype = MOVETYPE_TOSS;
+	gib->movetype = MOVETYPE_BOUNCE;
 	gib->touch = gib_touch;
-	vscale = 1.0;
+	vscale = 1.25;
 	/*
 	if (type == GIB_ORGANIC)
 	{
@@ -1943,9 +1943,11 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	VectorSet(gib->mins, -25, -25, -25);
 	VectorSet(gib->maxs, 25, 25, 25);
 
+	// setting vars from g_local.h
 	gib->add_vel = false;
-	gib->owner = ent;
 	gib->is_vomit = true;
+	gib->owner = ent;
+	gib->toScore = NULL;
 
 	//gib->think = G_FreeEdict;
 	//gib->nextthink = level.time + 10 + random()*10;

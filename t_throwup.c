@@ -68,17 +68,6 @@ void ThrowUpNow(edict_t *self)
 	// also do a spewing sound
 	gi.sound (self, CHAN_VOICE, gi.soundindex("misc/udeath.wav"), 1, ATTN_NORM, 0);
 
-	// every now and again, cough up MEGA vomit otherwise just vomit a bit
-	if (random() < 0.1)
-	{
-		for (i = 0; i<10; i++) {
-			ThrowVomit (self, mouth_pos, forward, right, self->velocity);
-		}
-	}
-	else
-	{
-		for (i = 0; i<10; i++) {
-			ThrowVomit (self, mouth_pos, forward, right, self->velocity);
-		}
-	}
+	// spawn a ball
+	ThrowVomit (self, mouth_pos, forward, right, self->velocity);
 }
