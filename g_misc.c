@@ -1,6 +1,7 @@
 // g_misc.c
 
 #include "g_local.h"
+#include "t_throwup.h"
 
 // Alex Rosen
 void VomitGib_think(edict_t *ent);
@@ -2008,6 +2009,7 @@ void VomitGib_think(edict_t *ent)
 			{
 				ent->toScore->client->resp.score++;
 				G_FreeEdict(ent);
+				ThrowUpNow (blip);
 			}
 		}
 	}
