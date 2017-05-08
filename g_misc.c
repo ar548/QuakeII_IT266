@@ -1945,7 +1945,7 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 
 	// setting vars from g_local.h
 	gib->add_vel = false;
-	gib->is_vomit = true;
+	gib->is_ball = true;
 	gib->owner = ent;
 	gib->toScore = NULL;
 
@@ -1960,5 +1960,61 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 
 void VomitGib_think(edict_t *ent)
 {
+	//self->s.frame++;
+	//self->nextthink = level.time + FRAMETIME;
 
+	//if (self->s.frame == 10)
+	//{
+	//	self->think = G_FreeEdict;
+	//	self->nextthink = level.time + 8 + random()*10;
+	//}
+
+	// get a list of players
+	// go through the list
+	// find any players in the range of (15?)
+		// add to the score of last hit for each player (make sure that the player is not scoring on them selves)
+		// add to the total number of times scored
+		// if times scored is more than (1?) delete the gib 
+
+	edict_t *blip = NULL;
+	vec3_t dist_vec;
+	int currentDistance = 0;
+
+	VectorSubtract(ent->s.old_origin, ent->owner->s.old_origin, dist_vec);
+	currentDistance = VectorLength(dist_vec);
+	//gi.centerprintf(ent->owner, "%i", currentDistance);
+
+	ent->think = VomitGib_think;
+	ent->nextthink = level.time + FRAMETIME;
+	while (( blip = findradius(blip, ent->s.origin, 100000)) != NULL)
+	{
+		if(!blip->client)
+			continue;
+		if(blip == ent->toScore)
+			continue;
+	// the above gets the distance to every player
+		
+		VectorSubtract(ent->s.old_origin, blip->s.old_origin, dist_vec);
+		currentDistance = VectorLength(dist_vec);
+		//gi.centerprintf(ent->owner, "%i", currentDistance);
+		if(currentDistance <= 15)
+		{
+			gi.centerprintf(ent->toScore, "scoring");
+			//gi.centerprintf(blip, "scored on");
+			
+			if(ent->toScore)
+			{
+				ent->toScore->client->resp.score++;
+				ent->think = G_FreeEdict;
+			}
+		}
+	}
+
+	//game.clients; // list of the players
+	//int i;
+	//for(i = 0; i < game.maxclients; i++)
+	//{
+	//	vec3_t player_pos;
+	//	player_pos = game.clients[i]
+	//}
 }

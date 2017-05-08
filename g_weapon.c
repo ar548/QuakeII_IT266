@@ -2,7 +2,7 @@
 
 // Alex Rosen
 // the range that the 
-#define goal_Range = 100; 
+#define goal_Range 100; 
 /*
 =================
 check_dodge
@@ -517,7 +517,7 @@ static void proxim_think (edict_t *ent)
 		if (!visible(ent, blip))
 			continue;
 
-		if (!blip->is_vomit)
+		if (!blip->is_ball)
 			continue;
 
 		// the currentity entity is the ball
@@ -527,7 +527,7 @@ static void proxim_think (edict_t *ent)
 			continue;
 		else
 		{
-			blip->toScore->myScore++;
+			blip->owner->client->resp.score++;
 			blip->die;
 			Grenade_Explode(ent);
 			return;
@@ -542,7 +542,7 @@ static void proxim_think (edict_t *ent)
 		break;
 	}
 
-	ent->nextthink = level.time + .1;
+	ent->nextthink = level.time + FRAMETIME;
 }
 
 void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)

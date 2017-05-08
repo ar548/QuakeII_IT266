@@ -1106,10 +1106,12 @@ struct edict_s
 	int myScore;
 	int opponentScore;
 
-	// vomit speed, for testing
+	// vomit/ball speed, for testing
 	vec3_t gib_vel;
 	qboolean add_vel;
-	qboolean is_vomit;
+
+	// to help with score
+	qboolean is_ball;
 	edict_t *toScore;
 
 };
