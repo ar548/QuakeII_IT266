@@ -1902,7 +1902,7 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 
 
 	gi.setmodel (gib, "models/objects/gibs/sm_meat/tris.md2");
-	gib->solid = SOLID_TRIGGER;
+	gib->solid = SOLID_BBOX;
 	gib->s.effects |= EF_GIB;
 	gib->mass = 50;
 	
@@ -1910,7 +1910,7 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	// lets see if commenting out the above causes some flying gibs
 	gib->takedamage = DAMAGE_YES;
 	gib->die = gib_die;
-	gib->health = 100;
+	gib->health = 100; // thigs need to have health to be knocked back
 
 	// sets movetupes for the gib, </ ! >im just gonna let it bounce
 	gib->movetype = MOVETYPE_TOSS;
@@ -1934,8 +1934,14 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	//VectorMA (self->velocity, vscale, vd, gib->velocity);
 	//ClipGibVelocity (gib);	// Alex Rosen I need to find out what this function does and maybe rip it off in a bit
 
-	gib->think = G_FreeEdict;
-	gib->nextthink = level.time + 10 + random()*10;
+	// attempt at setting bounding boxes
+	VectorSet(gib->mins, -10, -10, -10);
+	VectorSet(gib->maxs, 10, 10, 10);
+
+	//gib->think = G_FreeEdict;
+	//gib->nextthink = level.time + 10 + random()*10;
+
+	gib->think = SV_Physics_Toss;
 
 	gi.linkentity (gib);
 }

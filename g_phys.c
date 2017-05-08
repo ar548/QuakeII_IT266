@@ -676,6 +676,7 @@ void SV_Physics_Toss (edict_t *ent)
 // if onground, return without moving
 	if ( ent->groundentity )
 		return;
+		// Alex Rosen: this definetly broke some shit but oh well. for testing purposes
 
 	VectorCopy (ent->s.origin, old_origin);
 

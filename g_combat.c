@@ -411,7 +411,11 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 // figure momentum add
 	if (!(dflags & DAMAGE_NO_KNOCKBACK))
 	{
-		if ((knockback) && (targ->movetype != MOVETYPE_NONE) && (targ->movetype != MOVETYPE_BOUNCE) && (targ->movetype != MOVETYPE_PUSH) && (targ->movetype != MOVETYPE_STOP))
+		if ((knockback) 
+			&& (targ->movetype != MOVETYPE_NONE) 
+			&& (targ->movetype != MOVETYPE_BOUNCE) 
+			&& (targ->movetype != MOVETYPE_PUSH) 
+			&& (targ->movetype != MOVETYPE_STOP))
 		{
 			vec3_t	kvel;
 			float	mass;
@@ -482,7 +486,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		if (targ->health <= 0)
 		{
 			if ((targ->svflags & SVF_MONSTER) || (client))
-				targ->flags |= FL_NO_KNOCKBACK;
+				//targ->flags |= FL_NO_KNOCKBACK;
 			Killed (targ, inflictor, attacker, take, point);
 			return;
 		}
