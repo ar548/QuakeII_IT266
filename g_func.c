@@ -2027,3 +2027,8 @@ void SP_func_killbox (edict_t *ent)
 	ent->svflags = SVF_NOCLIENT;
 }
 
+
+// Alex Rosen
+// maybe i need to add a function here to figure out more on speed
+// for now im gonna look at th grenade toss function to attempt 
+//	to see if i can figure out physics from that

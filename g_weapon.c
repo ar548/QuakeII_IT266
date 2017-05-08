@@ -314,7 +314,7 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 			mod = MOD_BLASTER;
 			mod |= ~DAMAGE_NO_KNOCKBACK;
 		}
-		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 5000, DAMAGE_ENERGY, mod);
+		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 50, DAMAGE_ENERGY, mod);
 		// Alex Rosen
 		// I dont want my weapons to do damage. here is where the weapons will physics the ball
 	}
@@ -418,7 +418,7 @@ static void Grenade_Explode (edict_t *ent)
 			mod = MOD_HANDGRENADE;
 		else
 			mod = MOD_GRENADE;
-		T_Damage (ent->enemy, ent, ent->owner, dir, ent->s.origin, vec3_origin, (int)points, 100, DAMAGE_RADIUS, mod);
+		T_Damage (ent->enemy, ent, ent->owner, dir, ent->s.origin, vec3_origin, (int)points, 1000, DAMAGE_RADIUS, mod);
 		// Alex Rosen
 		// I dont want my weapons to do damage. here is where the weapons will physics the ball
 		// I should add a else if statement to check if the ball is what is being hit
@@ -590,7 +590,7 @@ void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *su
 
 	if (other->takedamage)
 	{
-		//T_Damage (other, ent, ent->owner, ent->velocity, ent->s.origin, plane->normal, ent->dmg, 0, 0, MOD_ROCKET);
+		T_Damage (other, ent, ent->owner, ent->velocity, ent->s.origin, plane->normal, ent->dmg, 250, 0, MOD_ROCKET);
 		// Alex Rosen
 		// I dont want my weapons to do damage. here is where the weapons will physics the ball
 		// I should add a else if statement to check if the ball is what is being hit
@@ -694,11 +694,13 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 
 			if ((tr.ent != self) && (tr.ent->takedamage))
 			{
-				//T_Damage (tr.ent, self, self, aimdir, tr.endpos, tr.plane.normal, damage, kick, 0, MOD_RAILGUN);
+				T_Damage (tr.ent, self, self, aimdir, tr.endpos, tr.plane.normal, damage, 400, 0, MOD_RAILGUN);
 
 				// Alex Rosen
-				// I dont want my weapons to do damage. here is where the weapons will physics the ball
-				// I should add a else if statement to check if the ball is what is being hit
+				// TODO: id kinda like this to be based on the damge between the player and the ball.  
+				// The farther away the player is the harder it hits.  
+				// This can be done fairly simply with the VectorLength function i believe.  
+				// for now it is a flat 400
 			}
 		}
 
@@ -765,7 +767,7 @@ void bfg_explode (edict_t *self)
 			gi.WriteByte (TE_BFG_EXPLOSION);
 			gi.WritePosition (ent->s.origin);
 			gi.multicast (ent->s.origin, MULTICAST_PHS);
-			//T_Damage (ent, self, self->owner, self->velocity, ent->s.origin, vec3_origin, (int)points, 0, DAMAGE_ENERGY, MOD_BFG_EFFECT);
+			T_Damage (ent, self, self->owner, self->velocity, ent->s.origin, vec3_origin, (int)points, -50, DAMAGE_ENERGY, MOD_BFG_EFFECT);
 			// Alex Rosen
 			// I dont want my weapons to do damage. here is where the weapons will physics the ball
 			

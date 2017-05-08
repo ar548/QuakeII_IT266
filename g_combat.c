@@ -434,8 +434,18 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		}
 	}
 
+	if(targ->is_vomit)
+	{
+		vec3_t	kvel;
+		float	mass = 50;
+
+		VectorScale (dir, 500.0 * (float)knockback / mass, kvel);
+		VectorAdd (targ->velocity, kvel, targ->velocity);
+	}
+
 	// Alex Rosen: commenting out below to remove all damage
 	//take = damage;
+	//save = 0;
 	take = 0;
 	save = damage;
 

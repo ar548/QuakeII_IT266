@@ -2,6 +2,10 @@
 
 #include "g_local.h"
 
+// Alex Rosen
+void VomitGib_think(edict_t *ent);
+
+
 
 /*QUAKED func_group (0 0 0) ?
 Used to group brushes together just for editor convenience.
@@ -1913,8 +1917,9 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	gib->health = 100; // thigs need to have health to be knocked back
 
 	// sets movetupes for the gib, </ ! >im just gonna let it bounce
-	gib->movetype = MOVETYPE_TOSS;
-	vscale = 0.5;
+	gib->movetype = MOVETYPE_BOUNCE;
+	gib->touch = gib_touch;
+	vscale = 1.5;
 	/*
 	if (type == GIB_ORGANIC)
 	{
@@ -1938,10 +1943,20 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	VectorSet(gib->mins, -10, -10, -10);
 	VectorSet(gib->maxs, 10, 10, 10);
 
+	gib->add_vel = false;
+	gib->owner = ent;
+	gib->is_vomit = true;
+
 	//gib->think = G_FreeEdict;
 	//gib->nextthink = level.time + 10 + random()*10;
 
-	gib->think = SV_Physics_Toss;
+	gib->think = VomitGib_think;
+	gib->nextthink = level.time + FRAMETIME;
 
 	gi.linkentity (gib);
+}
+
+void VomitGib_think(edict_t *ent)
+{
+
 }
