@@ -307,14 +307,17 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 
 	if (other->takedamage)
 	{
+		int kick = 250;
 		if (self->spawnflags & 1)
+		{
 			mod = MOD_HYPERBLASTER;
+			kick = 150;
+		}
 		else
 		{
 			mod = MOD_BLASTER;
-			mod |= ~DAMAGE_NO_KNOCKBACK;
 		}
-		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 50, DAMAGE_ENERGY, mod);
+		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, kick, DAMAGE_ENERGY, mod);
 		// Alex Rosen
 		// I dont want my weapons to do damage. here is where the weapons will physics the ball
 	}
@@ -485,6 +488,39 @@ static void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurfa
 	Grenade_Explode (ent);
 }
 
+// Alex Rosen
+// copied from tutorial @https://www.quakewiki.net/archives/qdevels/quake2/25_12_97b.html
+// CCH: New think function for proximity grenades
+static void proxim_think (edict_t *ent)
+{
+	edict_t *blip = NULL;
+
+	if (level.time > ent->delay)
+	{
+		Grenade_Explode(ent);
+		return;
+	}
+	
+	ent->think = proxim_think;
+	while ((blip = findradius(blip, ent->s.origin, 100)) != NULL)
+	{
+		if (!(blip->svflags & SVF_MONSTER) && !blip->client)
+			continue;
+		if (blip == ent->owner)
+			continue;
+		if (!blip->takedamage)
+			continue;
+		if (blip->health <= 0)
+			continue;
+		if (!visible(ent, blip))
+			continue;
+		ent->think = Grenade_Explode;
+		break;
+	}
+
+	ent->nextthink = level.time + .1;
+}
+
 void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
 {
 	edict_t	*grenade;
@@ -509,8 +545,14 @@ void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int s
 	grenade->s.modelindex = gi.modelindex ("models/objects/grenade/tris.md2");
 	grenade->owner = self;
 	grenade->touch = Grenade_Touch;
-	grenade->nextthink = level.time + timer;
-	grenade->think = Grenade_Explode;
+	//grenade->nextthink = level.time + timer;
+	//grenade->think = Grenade_Explode;
+	
+	// CCH: use our proximity think instead
+	grenade->nextthink = level.time + .1;
+	grenade->think = proxim_think;
+	grenade->delay = level.time + 60;
+
 	grenade->dmg = damage;
 	grenade->dmg_radius = damage_radius;
 	grenade->classname = "grenade";
@@ -767,7 +809,8 @@ void bfg_explode (edict_t *self)
 			gi.WriteByte (TE_BFG_EXPLOSION);
 			gi.WritePosition (ent->s.origin);
 			gi.multicast (ent->s.origin, MULTICAST_PHS);
-			T_Damage (ent, self, self->owner, self->velocity, ent->s.origin, vec3_origin, (int)points, -50, DAMAGE_ENERGY, MOD_BFG_EFFECT);
+
+			T_Damage (ent, self, self->owner, self->velocity, ent->s.origin, vec3_origin, (int)points, -500, DAMAGE_ENERGY, MOD_BFG_EFFECT);
 			// Alex Rosen
 			// I dont want my weapons to do damage. here is where the weapons will physics the ball
 			
@@ -797,7 +840,7 @@ void bfg_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf
 	// core explosion - prevents firing it into the wall/floor
 	if (other->takedamage)
 	{
-		//T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, 200, 0, 0, MOD_BFG_BLAST);
+		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, 200, 1000000, 0, MOD_BFG_BLAST);
 
 		// Alex Rosen
 		// I dont want my weapons to do damage. here is where the weapons will physics the ball
@@ -874,8 +917,8 @@ void bfg_think (edict_t *self)
 			// hurt it if we can
 			if ((tr.ent->takedamage) && !(tr.ent->flags & FL_IMMUNE_LASER) && (tr.ent != self->owner))
 			{
-				//T_Damage (tr.ent, self, self->owner, dir, tr.endpos, vec3_origin, dmg, 1, DAMAGE_ENERGY, MOD_BFG_LASER);
-
+				T_Damage (tr.ent, self, self->owner, dir, tr.endpos, vec3_origin, dmg, 55500, DAMAGE_ENERGY, MOD_BFG_LASER);
+				
 				// Alex Rosen
 				// I dont want my weapons to do damage. here is where the weapons will physics the ball
 				// I should add a else if statement to check if the ball is what is being hit

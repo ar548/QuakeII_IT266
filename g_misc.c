@@ -1917,9 +1917,9 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	gib->health = 100; // thigs need to have health to be knocked back
 
 	// sets movetupes for the gib, </ ! >im just gonna let it bounce
-	gib->movetype = MOVETYPE_BOUNCE;
+	gib->movetype = MOVETYPE_TOSS;
 	gib->touch = gib_touch;
-	vscale = 1.5;
+	vscale = 1.0;
 	/*
 	if (type == GIB_ORGANIC)
 	{
@@ -1940,8 +1940,8 @@ void ThrowVomit (edict_t *ent, vec3_t mouth_pos, vec3_t forward, vec3_t right, v
 	//ClipGibVelocity (gib);	// Alex Rosen I need to find out what this function does and maybe rip it off in a bit
 
 	// attempt at setting bounding boxes
-	VectorSet(gib->mins, -10, -10, -10);
-	VectorSet(gib->maxs, 10, 10, 10);
+	VectorSet(gib->mins, -25, -25, -25);
+	VectorSet(gib->maxs, 25, 25, 25);
 
 	gib->add_vel = false;
 	gib->owner = ent;
