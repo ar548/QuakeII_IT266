@@ -2002,11 +2002,13 @@ void VomitGib_think(edict_t *ent)
 		//gi.centerprintf(ent->owner, "%i", currentDistance);
 		if(currentDistance <= 37)
 		{
-			gi.centerprintf(ent->toScore, "scoring");
-			gi.centerprintf(blip, "scored on");
+			//gi.centerprintf(ent->toScore, "scoring");
+			//gi.centerprintf(blip, "scored on");
 			
 			if(ent->toScore)
 			{
+				gi.centerprintf(ent->toScore, "scoring");
+				gi.centerprintf(blip, "scored on");
 				ent->toScore->client->resp.score++;
 				G_FreeEdict(ent);
 				ThrowUpNow (blip);
